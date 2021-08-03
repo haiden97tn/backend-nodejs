@@ -5,9 +5,13 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 // Routes
 import productRoute from './routes/productRoute';
+import cartRoute from './routes/cart';
 import newsRoute from './routes/newsRoute';
 import cors from 'cors';
 import categoryRoute from './routes/categoryRoute';
+import authRoute from './routes/auth';
+import expressValidator from 'express-validator';
+import userRoutes from './routes/user';
 
 const app = express();
 dotenv.config();
@@ -24,19 +28,24 @@ mongoose.connection.on('Error', err => {
 
 // middleware
 app.use(morgan('dev'));
-app.use(bodyParser.json());
+app.use(express.json());
+
+// app.use(express.urlencoded());
 app.use(cors({
-    origin : '*',
+    origin: '*',
     credentials: true
 }))
+// app.use(expressValidator());
 
 // routes middleware
 app.use('/api', newsRoute);
-app.use('/api',productRoute);
+app.use('/api', productRoute);
 app.use('/api', categoryRoute);
-
+app.use('/api', authRoute);
+app.use('/api', userRoutes);
+app.use('/api', cartRoute);
 
 const port = process.env.PORT || 8000
-app.listen(port, () => { 
+app.listen(port, () => {
     console.log(`Server is runing in port: ${port}`);
 })

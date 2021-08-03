@@ -6,26 +6,26 @@ import _ from 'lodash';
 import { body, validationResult } from 'express-validator';
 
 
-export const create = async(req, res) => {
-    
+export const create = async (req, res) => {
+
     await body('name').trim().notEmpty().withMessage('hay nhap ten').run(req);
     const check = validationResult(req);
-    if(check.isEmpty()){
+    if (check.isEmpty()) {
         const category = new Category(req.body);
         category.save((err, data) => {
-            if(err){
+            if (err) {
                 res.status(400).json({
                     error: "Khong them duoc danh muc"
                 })
             }
-            res.json({ data, message: "Add new category ok"});
+            res.json({ data, message: "Add new category ok" });
         })
-    }else res.json({ error: 'error'})
+    } else res.json({ error: 'error' })
 }
 
 export const categoryById = (req, res, next, id) => {
     Category.findById(id).exec((err, category) => {
-        if(err || !category){
+        if (err || !category) {
             res.status(400).json({
                 error: "Khong tim thay danh muc"
             })
@@ -35,14 +35,14 @@ export const categoryById = (req, res, next, id) => {
     })
 }
 
-export const read = (req, res) =>{
+export const read = (req, res) => {
     return res.json(req.category)
 }
 
-export const  remove = (req, res) => {
+export const remove = (req, res) => {
     let category = req.category;
     category.remove((err, deleteCategory) => {
-        if(err){
+        if (err) {
             return res.status(400).json({
                 error: "Khong xoa duoc danh muc"
             })
@@ -53,10 +53,10 @@ export const  remove = (req, res) => {
         })
     })
 }
-export const list = (req, res)  => {
+export const list = (req, res) => {
     Category.find((err, data) => {
-        if(err){
-            mmessage: "Khong tim thay danh muc"
+        if (err) {
+            message: "Khong tim thay danh muc"
         }
         res.json({ data })
     })
@@ -67,10 +67,10 @@ export const update = (req, res) => {
     category = _.assignIn(category, req.body);
     console.log(category);
     category.save((err, data) => {
-        if(err){
+        if (err) {
             console.log(err.message);
-            return res.status(400).json({ message: 'error'})
+            return res.status(400).json({ message: 'error' })
         }
-        return res.json({ data, message: 'update category OK'})
-    })   
+        return res.json(data)
+    })
 }

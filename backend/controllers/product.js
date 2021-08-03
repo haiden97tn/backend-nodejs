@@ -1,21 +1,19 @@
 
 import Product from '../models/product';
-import fs from 'fs';
-import { request } from 'http';
 import _ from 'lodash';
 import { body, validationResult } from 'express-validator'
 
-export const create = async(req, res) => {
+export const create = async (req, res) => {
 
     await body('name').trim().notEmpty().withMessage('khong duoc bo trong').run(req);
     await body('price').notEmpty().isNumeric().withMessage('nhap so').run(req);
     await body('quantity').notEmpty().isNumeric().withMessage('nhap so').run(req);
 
+
     const check = validationResult(req);
     if (check.isEmpty()) {
         const product = new Product(req.body);
         product.save((err, data) => {
-
             if (err) {
                 res.status(400).json({
                     error: "Khong them duoc san pham"
@@ -24,7 +22,7 @@ export const create = async(req, res) => {
             res.json({ data, message: "Add new product ok" });
 
         })
-    }else res.json({ error : 'error'})
+    } else res.json({ error: 'error' })
 }
 
 export const productById = (req, res, next, id) => {
@@ -69,7 +67,7 @@ export const list = (req, res) => {
 }
 
 export const listMan = (req, res) => {
-    Product.find({ categoryId: "605c4d0146ff6c3260f1b73f" }, (err, data) => {
+    Product.find({ categoryId: "60b4507fcf45f22d28889706" }, (err, data) => {
         if (err) {
             console.log(err.message)
             return res.json(
@@ -81,7 +79,7 @@ export const listMan = (req, res) => {
 }
 
 export const listWoman = (req, res) => {
-    Product.find({ categoryId: "605c4d0146ff6c3260f1b740" }, (err, data) => {
+    Product.find({ categoryId: "605c4d0146ff6c3260f1b73f" }, (err, data) => {
         if (err) {
             console.log(err.message)
 
@@ -96,13 +94,14 @@ export const listWoman = (req, res) => {
 export const update = (req, res) => {
     let product = req.product;
     product = _.assignIn(product, req.body);
-    console.log(product)
+
     product.save((err, data) => {
         if (err) {
             console.log(err.message)
             return res.status(400).json({ message: 'error' })
         }
-        return res.json({ data, message: 'update successfully !' })
+        return res.json(data)
     })
 }
+
 
